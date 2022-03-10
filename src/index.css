@@ -1,0 +1,274 @@
+button.MuiButton-root,
+li.MuiMenuItem-root {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-content: flex-start;
+  flex-direction: row;
+  color: rgba(255, 255, 255, 0.7);
+}
+button.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium:hover {
+  background-color: transparent;
+  color: rgb(240, 211, 174);
+}
+button.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium:hover
+  path {
+  color: rgb(240, 211, 174);
+}
+.buttonIcon:hover svg.MuiSvgIcon-root {
+  color: #fff;
+}
+header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic.css-1k0i2s9-MuiPaper-root-MuiAppBar-root {
+  background-image: linear-gradient(
+    109.6deg,
+    rgba(90, 209, 243, 1) 11.2%,
+    rgba(254, 135, 245, 1) 91.1%
+  );
+}
+span.MuiTouchRipple-root.css-8je8zh-MuiTouchRipple-root {
+  font-weight: 700;
+}
+.Main {
+  color: white;
+  margin: 50px;
+}
+table.MuiTable-root.css-quj9j6-MuiTable-root {
+  background-color: #121212;
+}
+table.MuiTable-root.css-quj9j6-MuiTable-root th {
+  color: white;
+}
+table.MuiTable-root.css-quj9j6-MuiTable-root tbody th {
+  border-bottom: none;
+}
+table.MuiTable-root.css-quj9j6-MuiTable-root td {
+  color: white;
+  border-bottom: none;
+}
+
+table.MuiTable-root {
+  background: rgba(9, 9, 9, 0.45);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.actionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.searchContainer {
+  color: white;
+  align-items: center;
+  display: flex;
+  background: rgba(41, 40, 40, 0.55);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  align-content: flex-start;
+  flex-direction: row;
+  border-radius: 16px;
+
+}
+
+.css-yz9k0d-MuiInputBase-input {
+  color: white;
+  background-color: white;
+}
+input.MuiInputBase-input.css-yz9k0d-MuiInputBase-input {
+  color: white;
+  background-color: white;
+}
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignRight.MuiTableCell-sizeMedium.actionIcon.css-177gid-MuiTableCell-root {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+.iconButton {
+  cursor: pointer;
+}
+.iconButton:hover {
+  color: palevioletred;
+}
+.like_active {
+  color: palevioletred;
+}
+.pagination {
+  color: white;
+  width: 50%;
+  margin-left: auto;
+}
+button.MuiButtonBase-root.MuiPaginationItem-root.MuiPaginationItem-sizeMedium.MuiPaginationItem-text.MuiPaginationItem-circular.MuiPaginationItem-textSecondary.MuiPaginationItem-page.css-19micn4-MuiButtonBase-root-MuiPaginationItem-root {
+  color: #ffff;
+}
+svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiPaginationItem-icon.css-g2z002-MuiSvgIcon-root-MuiPaginationItem-icon
+  path {
+  color: white;
+}
+.MuiPaginationItem-root.MuiPaginationItem-sizeMedium.MuiPaginationItem-text.MuiPaginationItem-circular.MuiPaginationItem-textSecondary.MuiPaginationItem-ellipsis.css-1v2lvtn-MuiPaginationItem-root {
+  color: white;
+}
+ul.MuiPagination-ul.css-wjh20t-MuiPagination-ul {
+  position: absolute;
+  right: 0px;
+  padding: 10px;
+}
+.css-19micn4-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background-color: palevioletred !important;
+}
+.singerDetail {
+  color: white;
+  margin: 20px 50px 0 50px;
+}
+
+.singerDetail-container {
+  margin-top: 10px;
+
+  display: flex;
+  width: 50%;
+}
+.square-loading {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  animation: flip 1.2s ease-in-out infinite;
+}
+.square-loading img {
+  width: 100%;
+}
+@keyframes flip {
+  0% {
+    transform: perspective(200px) rotateX(0) rotateY(0);
+  }
+  50% {
+    transform: perspective(200px) rotateX(0) rotateY(180deg);
+  }
+  100% {
+    transform: perspective(200px) rotateX(0) rotateY(0);
+  }
+}
+
+.singerDetail-info {
+  margin-left: 10px;
+  padding: 10px;
+}
+.text-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-around;
+}
+.text-field label {
+    flex: 1;
+
+}
+.text-field input , .text-field select {
+  flex: 2;
+  padding:10px;
+}
+
+.formContainer {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 70%;
+  padding: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+ 
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+input[type=text], select, textarea {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+  }
+  
+  input[type=submit] {
+    background-color: palevioletred;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+  
+  input[type=submit]:hover {
+    background-color: rgb(202, 51, 101);
+  }
+  
+  .container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+  
+  .col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+  }
+  
+  .col-75 {
+      display: flex;
+      align-items: center;
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+@media only screen and (max-width: 1000px){
+    .formContainer{
+        width: 70%;
+        font-size: 20px;
+    }
+}
+@media only screen and (max-width: 800px){
+    .formContainer{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .pagination {
+      width: 100%;
+      margin: 0;
+    }
+    .Main {
+      margin: 10px;
+    }
+    .formContainer{
+        width: 100%;
+    }
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+      }
+  }
+
+
+  .searchContainer input {
+    border-radius: 16px;
+    background-color: transparent;
+    color: white;
+    border:none;
+  }
