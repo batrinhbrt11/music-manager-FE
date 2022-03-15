@@ -1,60 +1,216 @@
-import { AddCircle, AddCircleOutline } from "@mui/icons-material";
-import React from "react";
+import { AddCircle } from "@mui/icons-material";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
+
+import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import Stack from "@mui/material/Stack";
+
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { addMusic } from "../redux/musicSlice";
+import { useNavigate } from "react-router-dom";
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Addmusic = () => {
+ 
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+  const URL_API = process.env.REACT_APP_API_URL;
+  const dispatch = useDispatch();
+  const [listGenre, setListGenre] = useState([]);
+  const [listSinger, setListSinger] = useState([]);
+  const [valid,setValid] = useState({});
+  const [singer, setSinger] = useState("0");
+  const [name, setName] = useState("");
+
+  const [genre, setGenre] = useState("0");
+  const status = useSelector((state) => state.music.status);
+  const message = useSelector((state) => state.music.error);
+  const valueRef = useRef("");
+  const fectchGenre = () => {
+    fetch(`${URL_API}/genres/getAll`)
+      .then((res) => res.json())
+      .then((result) => setListGenre(result))
+      .catch((error) => console.log(error));
+  };
+  const fectchSinger = () => {
+    fetch(`${URL_API}/singers/getAll`)
+      .then((res) => res.json())
+      .then((result) => setListSinger(result))
+      .catch((error) => console.log(error));
+  };
+  useEffect(() => {
+    fectchGenre();
+    fectchSinger();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      if(name === ""){
+        setValid({...valid, name:"Song name is required!!"})
+      }
+      else if(genre=== "0"){
+        setValid({...valid, genre:"Genre is required!!"})
+      }
+      else if(singer=== "0"){
+        setValid({...valid, singer:"Singer is required!!"})
+      }
+      else{
+        const newMusic = {
+          musicName: name,
+          idGenre: genre,
+          idSinger: singer,
+          isPlaylist: false,
+          realeaseTime: valueRef.current.value,
+          urlFile: "",
+        };
+        dispatch(addMusic(newMusic));
+        setOpen(true);
+        setName("");
+        setGenre("0");
+        setSinger("0");
+        setTimeout(()=>{return navigate("/") }, 2000)
+      }
+     
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="Main">
       <h2>Adding Music</h2>
       <hr></hr>
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <form className="formContainer" onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-25">
+              <label>Song name: </label>
+            </div>
+            <div className="col-75">
+              <input
+                type="text"
+                placeholder="Song name.."
+                value={name}
+                onChange={(e) => {setName(e.target.value); setValid({})}}
+              />
+            </div>
+          </div>
+          {valid.name && (     <div className="row">
+            <div className="col-25">
+            </div>
+            <div className="col-75">
+              <span className="errorMessage">{valid.name}</span>
+            </div>
+          </div>)}
+     
+          <div className="row">
+            <div className="col-25">
+              <label>Genre: </label>
+            </div>
+            <div className="col-75">
+              <select
+                id="genres"
+                name="genres"
+                onChange={(e) => {setGenre(e.target.value); setValid({})}}
+                value={genre}
+              >
+                <option defaultValue="0">Choose Genre...</option>
+                {listGenre.map((genre) => (
+                  <option key={genre.genreId} value={genre.genreId}>
+                    {genre.genreName}
+                  </option>
+                ))}
+              </select>
+              <AddCircle className="iconButton" />
+            </div>
+          </div>
+          {valid.genre && (     <div className="row">
+            <div className="col-25">
+            </div>
+            <div className="col-75">
+              <span className="errorMessage">{valid.genre}</span>
+            </div>
+          </div>)}
+          <div className="row">
+            <div className="col-25">
+              <label>Singer: </label>
+            </div>
+            <div className="col-75">
+              <select
+                id="singer"
+                name="singer"
+                onChange={(e) => {setSinger(e.target.value); setValid({})}}
+                value={singer}
+              >
+                <option defaultValue="0">Choose Singer...</option>
+                {listSinger.map((singer) => (
+                  <option key={singer.singerId} value={singer.singerId}>
+                    {singer.singerName}
+                  </option>
+                ))}
+              </select>
+              <AddCircle className="iconButton" />
+            </div>
+          </div>
+          {valid.singer && (     <div className="row">
+            <div className="col-25">
+            </div>
+            <div className="col-75">
+              <span className="errorMessage">{valid.singer}</span>
+            </div>
+          </div>)}
+          <div className="row">
+            <div className="col-25">
+              <label>Release Time: </label>
+            </div>
+            <div className="col-75">
+              <TextField
+                id="date"
+                type="date"
+                defaultValue="2017-05-24"
+                sx={{ width: 220 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputRef={valueRef}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
 
-      <form className="formContainer">
-      <div className="row">
-    <div className="col-25">
-      <label >Song name: </label>
-    </div>
-    <div className="col-75">
-      <input type="text" placeholder="Song name.." />
-    </div>
-  </div>
-  
-  <div className="row">
-    <div className="col-25">
-      <label >Genre: </label>
-    </div>
-    <div className="col-75">
-      <select id="country" name="country">
-        <option value="australia">Australia</option>
-        <option value="canada">Canada</option>
-        <option value="usa">USA</option>
-      </select>
-      <AddCircle className="iconButton" />
-    </div>
-  </div>
-  <div className="row">
-    <div className="col-25">
-      <label >Singer: </label>
-    </div>
-    <div className="col-75">
-      <select id="country" name="country">
-        <option value="australia">Australia</option>
-        <option value="canada">Canada</option>
-        <option value="usa">USA</option>
-      </select>
-      <AddCircle className="iconButton" />
-    </div>
-  </div>
-  <div className="row">
-    <div className="col-25">
-      <label >Release Time: </label>
-    </div>
-    <div className="col-75">
-    <input type="date"  onChange={e => console.log(e.target.value)}/>
-    </div>
-  </div>
-  <div className="row">
-    <input type="submit" value="Submit" />
-  </div>
-      </form>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          {status === "ok" ? (
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              {message} !!
+            </Alert>
+          ) : (
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              {message} !!
+            </Alert>
+          )}
+        </Snackbar>
+      </Stack>
     </div>
   );
 };

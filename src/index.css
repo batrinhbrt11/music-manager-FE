@@ -91,10 +91,10 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignRight.MuiTableCell-size
   cursor: pointer;
 }
 .iconButton:hover {
-  color: palevioletred;
+  color: palevioletred  !important;
 }
 .like_active {
-  color: palevioletred;
+  color: palevioletred  !important;
 }
 .pagination {
   color: white;
@@ -155,20 +155,7 @@ ul.MuiPagination-ul.css-wjh20t-MuiPagination-ul {
   margin-left: 10px;
   padding: 10px;
 }
-.text-field {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  justify-content: space-around;
-}
-.text-field label {
-    flex: 1;
 
-}
-.text-field input , .text-field select {
-  flex: 2;
-  padding:10px;
-}
 
 .formContainer {
   margin-left: auto;
@@ -186,7 +173,7 @@ ul.MuiPagination-ul.css-wjh20t-MuiPagination-ul {
 input[type=text], select, textarea {
     width: 80%;
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid black;
     border-radius: 4px;
     resize: vertical;
   }
@@ -207,7 +194,7 @@ input[type=text], select, textarea {
   }
   
   input[type=submit]:hover {
-    background-color: rgb(202, 51, 101);
+    background-color: palevioletred ;
   }
   
   .container {
@@ -236,7 +223,13 @@ input[type=text], select, textarea {
     display: table;
     clear: both;
   }
+  .row{
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
 @media only screen and (max-width: 1000px){
+
     .formContainer{
         width: 70%;
         font-size: 20px;
@@ -272,3 +265,26 @@ input[type=text], select, textarea {
     color: white;
     border:none;
   }
+
+  input#mui-1 {
+    color:white;
+   
+    border-radius: 14px;
+  }
+
+  label#mui-1-label,svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-i4bv87-MuiSvgIcon-root{
+    color:white
+  }
+
+  input#date{
+    background: white;
+  }
+.errorMessage{
+  color: red;
+  font-weight: 300;
+  font-size: 12px;
+  font-family: 'Times New Roman', Times, serif
+}
+.css-1e6y48t-MuiButtonBase-root-MuiButton-root{
+  color: palevioletred  !important;
+}

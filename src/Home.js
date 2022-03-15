@@ -7,6 +7,8 @@ import Genre from './Component/Genre';
 import Singer from './Component/Singer';
 import Detailsinger from './Component/DetailSinger';
 import Addmusic from './Component/AddMusic';
+import Addgenre from './Component/AddGenre';
+import Addsinger from './Component/AddSinger';
 
 
 
@@ -34,10 +36,20 @@ const Home = () => {
               path="/genre"
               element={<Genre />}
             />
+               <Route
+              exact
+              path="/add-genre"
+              element={<Addgenre />}
+            />
              <Route
               exact
               path="/singer"
               element={<Singer/>}
+            />
+                  <Route
+              exact
+              path="/add-singer"
+              element={<Addsinger />}
             />
             <Route
               exact

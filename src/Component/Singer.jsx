@@ -11,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Itemsinger from "./ItemSinger";
+import { Link } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
@@ -37,7 +38,10 @@ const Singer = () => {
            
           </div>
           <div>
+            <Link to="/add-singer">
             <AddCircleIcon className="iconButton" />
+              </Link>
+        
           </div>
         </div>
 

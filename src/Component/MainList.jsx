@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,36 +8,51 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import Listitemmusic from "./ListItemMusic";
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMusic } from "../redux/musicSlice";
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-const Mainlist = ({filter}) => {
+const Mainlist = ({ filter }) => {
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const object = useSelector((state) => state.music.object);
+  const isUpdate = useSelector((state) => state.music.isUpdate);
+  const [listMusic, setListMusic] = useState(object.content);
+  const [total, setTotal] = useState(object.totalElement);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+  useEffect(() => {
+    dispatch(getMusic(page));
 
-  
+  }, [dispatch, page,isUpdate]);
+
+  useEffect(() => {
+    setListMusic(object.content);
+    setTotal(object.totalElement);
+  }, [object]);
+
+ 
   return (
     <div className="Main">
-  
       <div className="actionContainer">
         <div className="searchContainer">
           <input type="text" id="fname" name="fname" />
-          <SearchIcon onClick={e => console.log("sdasdasd")} className='iconButton'/>
+          <SearchIcon
+            onClick={(e) => console.log("sdasdasd")}
+            className="iconButton"
+          />
         </div>
         <div>
-          <AddCircleIcon className='iconButton'/>
+          <Link to="/add-music">
+          
+            <AddCircleIcon className="iconButton" />
+          </Link>
         </div>
       </div>
-
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -49,20 +64,28 @@ const Mainlist = ({filter}) => {
               <TableCell align="right">Action</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              
-              <Listitemmusic music={row} filter={filter} key={row.name} />
-            ))}
-          </TableBody>
+
+          {listMusic && (
+            <TableBody>
+              {listMusic.map((row) => (
+                <Listitemmusic music={row} filter={filter} key={row.musicId} />
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
       <div className="pagination">
-      <Stack spacing={2}>
-      <Pagination count={12} color="secondary" />
-    </Stack>
+        <Stack spacing={2}>
+          {total && (
+            <Pagination
+              count={Math.ceil(total / 10)}
+              color="secondary"
+              page={page}
+              onChange={handleChange}
+            />
+          )}
+        </Stack>
       </div>
-
     </div>
   );
 };

@@ -12,6 +12,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import Listitemgenre from "./ListItemGenre";
+import { Link } from "react-router-dom";
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
@@ -35,7 +36,10 @@ const Genre = () => {
       <div className="actionContainer">
         <div></div>
         <div>
+          <Link to="/add-genre">
           <AddCircleIcon className="iconButton" />
+            </Link>
+  
         </div>
       </div>
 
