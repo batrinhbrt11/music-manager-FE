@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { addMusic } from "../redux/musicSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -21,6 +21,9 @@ const Addmusic = () => {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
+    }
+    if(status ==='ok'){
+      return navigate("/") 
     }
     setOpen(false);
   };
@@ -131,7 +134,10 @@ const Addmusic = () => {
                   </option>
                 ))}
               </select>
+              <Link to="/add-genre">
               <AddCircle className="iconButton" />
+              </Link>
+            
             </div>
           </div>
           {valid.genre && (     <div className="row">
@@ -159,7 +165,10 @@ const Addmusic = () => {
                   </option>
                 ))}
               </select>
+              <Link to="/add-singer">
               <AddCircle className="iconButton" />
+              </Link>
+            
             </div>
           </div>
           {valid.singer && (     <div className="row">
@@ -191,7 +200,7 @@ const Addmusic = () => {
           </div>
         </form>
 
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
           {status === "ok" ? (
             <Alert
               onClose={handleClose}

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,28 +13,33 @@ import Stack from "@mui/material/Stack";
 
 import Listitemgenre from "./ListItemGenre";
 import { Link } from "react-router-dom";
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { useDispatch, useSelector } from "react-redux";
+import { getGenre } from "../redux/genreSlice";
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
 const Genre = () => {
+  const dispatch= useDispatch()
+  const [page, setPage] = useState(1);
+  const object = useSelector((state)=> state.genre.object)
+  const isUpdate = useSelector((state) => state.genre.isUpdate);
+  const [listGenre, setListGenre ] = useState(object.content)
+  const [total, setTotal] = useState(object.totalElement);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+  useEffect(()=>{
+    dispatch(getGenre(page));
+    
+  },[dispatch,page,isUpdate])
+  useEffect(() => {
+    setListGenre(object.content);
+    
+    setTotal(object.totalElement);
+  }, [object]);
   return (
     <div className="Main">
       <div className="actionContainer">
-        <div></div>
+      <h2>List Genre</h2>
+      <hr></hr><br></br>
         <div>
           <Link to="/add-genre">
           <AddCircleIcon className="iconButton" />
@@ -53,16 +58,26 @@ const Genre = () => {
               <TableCell align="right">Action</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <Listitemgenre genre={row} key={row.name} />
+          {listGenre && (
+            <TableBody>
+            {listGenre.map((genre) => (
+              <Listitemgenre genre={genre} key={genre.genreId} />
             ))}
           </TableBody>
+          )}
+          
         </Table>
       </TableContainer>
       <div className="pagination">
         <Stack spacing={2}>
-          <Pagination count={12} color="secondary" />
+        {total && (
+            <Pagination
+              count={Math.ceil(total / 10)}
+              color="secondary"
+              page={page}
+              onChange={handleChange}
+            />
+          )}
         </Stack>
       </div>
     </div>

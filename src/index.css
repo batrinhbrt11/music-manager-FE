@@ -123,33 +123,25 @@ ul.MuiPagination-ul.css-wjh20t-MuiPagination-ul {
   color: white;
   margin: 20px 50px 0 50px;
 }
-
+.singerDetail-info span{
+  
+  color: palevioletred;
+}
 .singerDetail-container {
   margin-top: 10px;
-
   display: flex;
-  width: 50%;
+  width: 70%;
 }
 .square-loading {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   border-radius: 8px;
-  animation: flip 1.2s ease-in-out infinite;
+  
 }
 .square-loading img {
   width: 100%;
 }
-@keyframes flip {
-  0% {
-    transform: perspective(200px) rotateX(0) rotateY(0);
-  }
-  50% {
-    transform: perspective(200px) rotateX(0) rotateY(180deg);
-  }
-  100% {
-    transform: perspective(200px) rotateX(0) rotateY(0);
-  }
-}
+
 
 .singerDetail-info {
   margin-left: 10px;
@@ -239,9 +231,17 @@ input[type=text], select, textarea {
     .formContainer{
         width: 100%;
     }
+    .singerDetail-container{
+      
+      width: 100%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
+  .singerDetail-container{
+    display: block;
+   
+  }
     .pagination {
       width: 100%;
       margin: 0;
@@ -287,4 +287,10 @@ input[type=text], select, textarea {
 }
 .css-1e6y48t-MuiButtonBase-root-MuiButton-root{
   color: palevioletred  !important;
+}
+.linkText{
+  color:white
+}
+.linkText:hover{
+  text-decoration: underline;
 }

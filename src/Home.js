@@ -1,14 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+
 import Headerbar from './Component/HeaderBar';
 import Mainlist from './Component/MainList';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Genre from './Component/Genre';
 import Singer from './Component/Singer';
 import Detailsinger from './Component/DetailSinger';
 import Addmusic from './Component/AddMusic';
 import Addgenre from './Component/AddGenre';
 import Addsinger from './Component/AddSinger';
+import Playlist from './Component/PlayList';
+import Musicbygenre from './Component/MusicByGenre';
 
 
 
@@ -54,12 +56,12 @@ const Home = () => {
             <Route
               exact
               path="/playlist"
-              element={<Mainlist filter={"playlist"}/>}
+              element={<Playlist />}
             />
              <Route
               exact
               path="/genre/:id"
-              element={<Mainlist filter={"genre"}/>}
+              element={<Musicbygenre />}
             />
              <Route
               exact

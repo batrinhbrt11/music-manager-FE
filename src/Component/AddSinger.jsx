@@ -1,70 +1,144 @@
-import React,{useState} from "react";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import React, { useState, useRef, forwardRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import { addSinger } from "../redux/singerSlice";
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const Addsinger = () => {
-  const [value, setValue] = useState(new Date("2014-08-18T21:11:54"));
-
-  const handleChange = (newValue) => {
-    setValue(newValue);
+  const navigate = useNavigate();
+  const valueRef = useRef("");
+  const name = useRef("");
+  const [open, setOpen] = useState(false);
+  const gender = useRef("");
+  const description = useRef("");
+  const [valid, setValid] = useState("");
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.singer.status);
+  const message = useSelector((state) => state.singer.error);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    if(status ==='ok'){
+      return navigate("/singer") 
+    }
+    setOpen(false);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name.current.value === "") {
+      setValid("Singer name is required!!");
+    } else {
+      const newSinger = {
+        singerName: name.current.value,
+        singerSex: gender.current.value,
+        singerBirthdy: valueRef.current.value,
+        description: description.current.value,
+        urlImage: "",
+      };
+      dispatch(addSinger(newSinger));
+      setOpen(true);
+      
+    }
   };
   return (
     <div className="Main">
       <h2>Adding Music</h2>
       <hr></hr>
-
-      <form className="formContainer">
-        <div className="row">
-          <div className="col-25">
-            <label>Singer name: </label>
-          </div>
-          <div className="col-75">
-            <input type="text" placeholder="Singer name.." />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-25">
-            <label>Gender: </label>
-          </div>
-          <div className="col-75">
-            <select id="gender" name="gender">
-              <option value="1">Male</option>
-              <option value="0">Female</option>
-             
-            </select>
-
-          </div>
-        </div>
-      
-        <div className="row">
-          <div className="col-25">
-            <label>Birthday: </label>
-          </div>
-          <div className="col-75">
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DesktopDatePicker
-                inputFormat="MM/dd/yyyy"
-                value={value}
-                onChange={handleChange}
-                renderInput={(params) => <TextField {...params} />}
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <form className="formContainer" onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-25">
+              <label>Singer name: </label>
+            </div>
+            <div className="col-75">
+              <input
+                type="text"
+                placeholder="Singer name.."
+                ref={name}
+                onFocus={(e) => setValid("")}
               />
-            </LocalizationProvider>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-25">
-            <label>Description: </label>
+          {valid && (
+            <div className="row">
+              <div className="col-25"></div>
+              <div className="col-75">
+                <span className="errorMessage">{valid}</span>
+              </div>
+            </div>
+          )}
+          <div className="row">
+            <div className="col-25">
+              <label>Gender: </label>
+            </div>
+            <div className="col-75">
+              <select id="gender" name="gender" ref={gender}>
+                <option value={true}>Male</option>
+                <option value={false}>Female</option>
+              </select>
+            </div>
           </div>
-          <div className="col-75">
-          <textarea id="subject" name="subject" placeholder="Write something.." ></textarea>
+
+          <div className="row">
+            <div className="col-25">
+              <label>Birthday: </label>
+            </div>
+            <div className="col-75">
+              <TextField
+                id="date"
+                type="date"
+                defaultValue="2017-05-24"
+                sx={{ width: 220 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputRef={valueRef}
+              />
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <input type="submit" value="Submit" />
-        </div>
-      </form>
+          <div className="row">
+            <div className="col-25">
+              <label>Description: </label>
+            </div>
+            <div className="col-75">
+              <textarea
+                id="subject"
+                name="subject"
+                placeholder="Write something.."
+                ref={description}
+              ></textarea>
+            </div>
+          </div>
+          <div className="row">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+          {status === "ok" ? (
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              {message} !!
+            </Alert>
+          ) : (
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              {message} !!
+            </Alert>
+          )}
+        </Snackbar>
+      </Stack>
     </div>
   );
 };
