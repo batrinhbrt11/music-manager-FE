@@ -55,7 +55,7 @@ export const addMusic = createAsyncThunk("music/addMusic", async (music) => {
     headers: myHeaders,
     body: JSON.stringify(music),
   };
-  console.log(music);
+
   return fetch(`${URL_API}/musics`, requestOptions)
     .then((res) => res.json())
     .catch((error) => {

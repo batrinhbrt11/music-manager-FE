@@ -10,6 +10,7 @@ import Tablesong from "./TableSong";
 
 const Mainlist = () => {
   const dispatch = useDispatch();
+  const URL_API = process.env.REACT_APP_API_URL;
   const [page, setPage] = useState(1);
   const object = useSelector((state) => state.music.object);
   const isUpdate = useSelector((state) => state.music.isUpdate);
@@ -26,14 +27,19 @@ const Mainlist = () => {
     setListMusic(object.content);
     setTotal(object.totalElement);
   }, [object]);
-
+  const handleSearchText = (e) =>{
+    fetch(`${URL_API}/musics/search?text=${e.target.value}`)
+    .then((res) => res.json())
+    .then((result) => setListMusic(result.content))
+    .catch((error) => console.log(error));
+  }
   return (
     <div className="Main">
         <h2>List Song</h2>
       <hr></hr><br></br>
       <div className="actionContainer">
         <div className="searchContainer">
-          <input type="text" id="fname" name="fname" />
+          <input type="text" id="fname" name="fname" onChange={handleSearchText} />
           <SearchIcon className="iconButton" />
         </div>
         <div>

@@ -9,21 +9,22 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { addMusic } from "../redux/musicSlice";
 import { Link, useNavigate } from "react-router-dom";
-
+import { storage } from "../FirebaseConfig";
+import { ref, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const Addmusic = () => {
- 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [file,setFile] = useState(null)
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    if(status ==='ok'){
-      return navigate("/") 
+    if (status === "ok") {
+      return navigate("/");
     }
     setOpen(false);
   };
@@ -31,7 +32,7 @@ const Addmusic = () => {
   const dispatch = useDispatch();
   const [listGenre, setListGenre] = useState([]);
   const [listSinger, setListSinger] = useState([]);
-  const [valid,setValid] = useState({});
+  const [valid, setValid] = useState({});
   const [singer, setSinger] = useState("0");
   const [name, setName] = useState("");
 
@@ -55,36 +56,50 @@ const Addmusic = () => {
     fectchGenre();
     fectchSinger();
   }, []);
-
-  const handleSubmit = (e) => {
+  const handleFileChange =(e)=>{
+    if(e.target.files[0]){
+      setFile(e.target.files[0])
+    }
+  }
+  const handleUpload = (e)=>{
     e.preventDefault();
+  
+      const storageRef = ref(storage, `/music/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+   
+      uploadTask.on("state_changed",
+        snapshot=>{},
+        error=>{
+          console.log(error)
+        },
+        ()=>{
+          getDownloadURL(uploadTask.snapshot.ref).then(url=>handleSubmit(url))
+        }
+      )
+   
+
+  }
+  const handleSubmit = (url) => {
+    
     try {
-      if(name === ""){
-        setValid({...valid, name:"Song name is required!!"})
-      }
-      else if(genre=== "0"){
-        setValid({...valid, genre:"Genre is required!!"})
-      }
-      else if(singer=== "0"){
-        setValid({...valid, singer:"Singer is required!!"})
-      }
-      else{
+      if (name === "") {
+        setValid({ ...valid, name: "Song name is required!!" });
+      } else if (genre === "0") {
+        setValid({ ...valid, genre: "Genre is required!!" });
+      } else if (singer === "0") {
+        setValid({ ...valid, singer: "Singer is required!!" });
+      } else {
         const newMusic = {
           musicName: name,
           idGenre: genre,
           idSinger: singer,
           isPlaylist: false,
           realeaseTime: valueRef.current.value,
-          urlFile: "",
+          urlFile: url,
         };
         dispatch(addMusic(newMusic));
         setOpen(true);
-        setName("");
-        setGenre("0");
-        setSinger("0");
-        setTimeout(()=>{return navigate("/") }, 2000)
       }
-     
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +109,7 @@ const Addmusic = () => {
       <h2>Adding Music</h2>
       <hr></hr>
       <Stack spacing={2} sx={{ width: "100%" }}>
-        <form className="formContainer" onSubmit={handleSubmit}>
+        <form className="formContainer" onSubmit={handleUpload}>
           <div className="row">
             <div className="col-25">
               <label>Song name: </label>
@@ -104,18 +119,22 @@ const Addmusic = () => {
                 type="text"
                 placeholder="Song name.."
                 value={name}
-                onChange={(e) => {setName(e.target.value); setValid({})}}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setValid({});
+                }}
               />
             </div>
           </div>
-          {valid.name && (     <div className="row">
-            <div className="col-25">
+          {valid.name && (
+            <div className="row">
+              <div className="col-25"></div>
+              <div className="col-75">
+                <span className="errorMessage">{valid.name}</span>
+              </div>
             </div>
-            <div className="col-75">
-              <span className="errorMessage">{valid.name}</span>
-            </div>
-          </div>)}
-     
+          )}
+
           <div className="row">
             <div className="col-25">
               <label>Genre: </label>
@@ -124,7 +143,10 @@ const Addmusic = () => {
               <select
                 id="genres"
                 name="genres"
-                onChange={(e) => {setGenre(e.target.value); setValid({})}}
+                onChange={(e) => {
+                  setGenre(e.target.value);
+                  setValid({});
+                }}
                 value={genre}
               >
                 <option defaultValue="0">Choose Genre...</option>
@@ -135,18 +157,18 @@ const Addmusic = () => {
                 ))}
               </select>
               <Link to="/add-genre">
-              <AddCircle className="iconButton" />
+                <AddCircle className="iconButton" />
               </Link>
-            
             </div>
           </div>
-          {valid.genre && (     <div className="row">
-            <div className="col-25">
+          {valid.genre && (
+            <div className="row">
+              <div className="col-25"></div>
+              <div className="col-75">
+                <span className="errorMessage">{valid.genre}</span>
+              </div>
             </div>
-            <div className="col-75">
-              <span className="errorMessage">{valid.genre}</span>
-            </div>
-          </div>)}
+          )}
           <div className="row">
             <div className="col-25">
               <label>Singer: </label>
@@ -155,7 +177,10 @@ const Addmusic = () => {
               <select
                 id="singer"
                 name="singer"
-                onChange={(e) => {setSinger(e.target.value); setValid({})}}
+                onChange={(e) => {
+                  setSinger(e.target.value);
+                  setValid({});
+                }}
                 value={singer}
               >
                 <option defaultValue="0">Choose Singer...</option>
@@ -166,18 +191,18 @@ const Addmusic = () => {
                 ))}
               </select>
               <Link to="/add-singer">
-              <AddCircle className="iconButton" />
+                <AddCircle className="iconButton" />
               </Link>
-            
             </div>
           </div>
-          {valid.singer && (     <div className="row">
-            <div className="col-25">
+          {valid.singer && (
+            <div className="row">
+              <div className="col-25"></div>
+              <div className="col-75">
+                <span className="errorMessage">{valid.singer}</span>
+              </div>
             </div>
-            <div className="col-75">
-              <span className="errorMessage">{valid.singer}</span>
-            </div>
-          </div>)}
+          )}
           <div className="row">
             <div className="col-25">
               <label>Release Time: </label>
@@ -193,6 +218,14 @@ const Addmusic = () => {
                 }}
                 inputRef={valueRef}
               />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-25">
+              <label>File: </label>
+            </div>
+            <div className="col-75">
+            <input type="file" id="myfile" name="myfile"  accept=".mp3" onChange={handleFileChange}/>
             </div>
           </div>
           <div className="row">

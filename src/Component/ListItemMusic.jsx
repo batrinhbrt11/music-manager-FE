@@ -15,13 +15,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-
-const Listitemmusic = ({ music, filter }) => {
+import { storage } from "../FirebaseConfig";
+import { ref, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+const Listitemmusic = ({ music, filter,setMusic }) => {
   const dispatch = useDispatch();
   const [listGenre, setListGenre] = useState([]);
   const [listSinger, setListSinger] = useState([]);
   const [genreOfSong, setGenreOfSong] = useState("");
   const [singerOfSong, setSingerOfSong] = useState("");
+  const [file,setFile] = useState(null)
   const URL_API = process.env.REACT_APP_API_URL;
   const valueRef = useRef("");
   const name = useRef("");
@@ -73,15 +76,16 @@ const Listitemmusic = ({ music, filter }) => {
     setOpenEdit(false);
   };
 
-  const handleSubmitEdit = () => {
+  const handleSubmitEdit = (url) => {
     const newMusic = {
       musicName: name.current.value,
       idGenre: genre,
       idSinger: singer,
       isPlaylist: music.isPlayList,
       realeaseTime: valueRef.current.value,
-      urlFile: "",
+      urlFile: url,
     };
+    console.log(newMusic)
     dispatch(updateMusic({ id: music.musicId, music: newMusic }));
     setOpenEdit(false);
   };
@@ -100,10 +104,40 @@ const Listitemmusic = ({ music, filter }) => {
     e.preventDefault();
     dispatch(addPlaylist(music.musicId));
   };
+
+
+  const handleFileChange =(e)=>{
+    if(e.target.files[0]){
+      setFile(e.target.files[0])
+    }
+  }
+  const handleUpload = (e)=>{
+    e.preventDefault();
+    if(file){
+      const storageRef = ref(storage, `/music/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+   
+      uploadTask.on("state_changed",
+        snapshot=>{},
+        error=>{
+          console.log(error)
+        },
+        ()=>{
+          getDownloadURL(uploadTask.snapshot.ref).then(url=> handleSubmitEdit(url))
+        }
+      )
+    }else{
+      handleSubmitEdit(music.urlFile)
+    }
+      
+   
+
+  }
+
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
       <TableCell component="th" scope="row">
-        {music.musicName}
+      {music.musicName}
       </TableCell>
       <TableCell align="right">{music.realeaseTime.slice(0, 10)}</TableCell>
       {filter !== "genre" && <TableCell align="right">{genreOfSong}</TableCell>}
@@ -113,7 +147,9 @@ const Listitemmusic = ({ music, filter }) => {
 
       {filter !== "playlist" ? (
         <TableCell align="right" className="actionIcon">
-          <DeleteIcon className="iconButton" onClick={handleClickOpenDelete} />{" "}
+          
+          <PlayArrowIcon className="iconButton" onClick={e => setMusic(music.urlFile)} />
+          <DeleteIcon className="iconButton" onClick={handleClickOpenDelete} />
           |
           <CreateIcon className="iconButton" onClick={handleClickOpenEdit} /> |
           {!music.isPlayList ? (
@@ -212,10 +248,18 @@ const Listitemmusic = ({ music, filter }) => {
                 />
               </div>
             </div>
+            <div className="row">
+            <div className="col-25">
+              <label>File: </label>
+            </div>
+            <div className="col-75">
+            <input type="file" id="myfile" name="myfile"  accept=".mp3" onChange={handleFileChange}/>
+            </div>
+          </div>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleSubmitEdit}>
+          <Button autoFocus onClick={ handleUpload}>
             Submit
           </Button>
           <Button onClick={handleCloseEdit} autoFocus>
