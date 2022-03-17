@@ -25,8 +25,8 @@ const Listitemmusic = ({ music, filter }) => {
   const URL_API = process.env.REACT_APP_API_URL;
   const valueRef = useRef("");
   const name = useRef("");
-  const genre = useRef("");
-  const singer = useRef("");
+  const [genre,setGenre] = useState(music.idGenre);
+  const [singer,setSinger] = useState(music.idSinger);
   const getGenreById = () => {
     fetch(`${URL_API}/genres/${music.idGenre}`)
       .then((res) => res.json())
@@ -42,7 +42,7 @@ const Listitemmusic = ({ music, filter }) => {
   useEffect(() => {
     getGenreById();
     getSingerById();
-  }, []);
+  }, [music.idGenre,music.idSinger]);
   const handleDeleteClick = () => {
     dispatch(deleteMusic(music.musicId));
   };
@@ -76,8 +76,8 @@ const Listitemmusic = ({ music, filter }) => {
   const handleSubmitEdit = () => {
     const newMusic = {
       musicName: name.current.value,
-      idGenre: genre.current.value,
-      idSinger: singer.current.value,
+      idGenre: genre,
+      idSinger: singer,
       isPlaylist: music.isPlayList,
       realeaseTime: valueRef.current.value,
       urlFile: "",
@@ -133,14 +133,14 @@ const Listitemmusic = ({ music, filter }) => {
           />
         </TableCell>
       )}
-      {/* add dialog */}
+      {/* edit dialog */}
       <Dialog
         fullScreen={fullScreen}
         open={openEdit}
         onClose={handleCloseEdit}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">Edit Music</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">Edit Dialog</DialogTitle>
         <DialogContent>
           <form>
             <div className="row">
@@ -164,8 +164,8 @@ const Listitemmusic = ({ music, filter }) => {
                 <select
                   id="genres"
                   name="genres"
-                  defaultValue={music.idGenre}
-                  ref={genre}
+                  value={genre}
+                  onChange={e=> setGenre(e.target.value)}
                 >
                   {listGenre.map((genre) => (
                     <option key={genre.genreId} value={genre.genreId}>
@@ -184,8 +184,8 @@ const Listitemmusic = ({ music, filter }) => {
                 <select
                   id="singer"
                   name="singer"
-                  defaultValue={music.idSinger}
-                  ref={singer}
+                  value={singer}
+                  onChange={e=> setSinger(e.target.value)}
                 >
                   {listSinger.map((singer) => (
                     <option key={singer.singerId} value={singer.singerId}>
@@ -223,7 +223,7 @@ const Listitemmusic = ({ music, filter }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* end add dialog */}
+      {/* end edit dialog */}
 
       {/* delete dialog */}
       <Dialog
@@ -231,7 +231,7 @@ const Listitemmusic = ({ music, filter }) => {
         onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+      >   <DialogTitle>Delete Dialog</DialogTitle>
         <DialogContent>
           {music.isPlayList ? (
             <DialogContentText id="alert-dialog-description">

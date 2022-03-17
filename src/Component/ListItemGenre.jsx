@@ -69,7 +69,7 @@ const Listitemgenre = ({ genre }) => {
         onClose={handleCloseEdit}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+      >   <DialogTitle>Edit Dialog</DialogTitle>
         <DialogContent>
         <div className="row">
               <div className="col-25">
@@ -102,7 +102,7 @@ const Listitemgenre = ({ genre }) => {
         onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+      >   <DialogTitle>Delete Dialog</DialogTitle>
         <DialogContent>
           {(genre.count >0 ) ?   <DialogContentText id="alert-dialog-description">
             This genre has song, can not remove 

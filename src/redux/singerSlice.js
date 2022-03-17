@@ -10,23 +10,7 @@ export const getSinger = createAsyncThunk("singer/getSinger", async (page) => {
       console.error(`Error ${error}`);
     });
 });
-export const updateSinger = createAsyncThunk(
-  "singer/updateSinger",
-  async ({ id, singer }) => {
-    
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: JSON.stringify(singer),
-    };
 
-    return fetch(`${URL_API}/singers/${id}`, requestOptions)
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error(`Error ${error}`);
-      });
-  }
-);
 export const deleteSinger = createAsyncThunk(
   "singer/deleteSinger",
   async (id) => {
@@ -77,20 +61,7 @@ const singerSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    //update
-    [updateSinger.pending]: (state, action) => {
-      state.loading = true;
-      state.isUpdate = true;
-    },
-    [updateSinger.fulfilled]: (state, action) => {
-      state.isUpdate = false;
-      state.status = action.payload.status;
-      state.error = action.payload.message;
-      state.loading = false;
-    },
-    [updateSinger.rejected]: (state, action) => {
-      state.loading = false;
-    },
+  
 
     //delete
     [deleteSinger.pending]: (state, action) => {

@@ -13,7 +13,7 @@ export const getGenre = createAsyncThunk("genre/getGenre", async (page) => {
 export const updateGenre = createAsyncThunk(
   "genre/updateGenre",
   async ({ id, genre }) => {
-    console.log(id, genre);
+    
     const requestOptions = {
       method: "PUT",
       headers: myHeaders,

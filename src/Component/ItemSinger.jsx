@@ -36,8 +36,8 @@ const Itemsinger = ({ singer }) => {
       </TableCell>
       <TableCell align="right">{singer.count}</TableCell>
       <TableCell align="right" className="actionIcon">
-        <DeleteIcon className="iconButton" onClick={handleClickOpenDelete} /> |
-        <CreateIcon className="iconButton" />
+        <DeleteIcon className="iconButton" onClick={handleClickOpenDelete} /> 
+     
       </TableCell>
 
       {/* delete dialog */}
@@ -46,7 +46,7 @@ const Itemsinger = ({ singer }) => {
         onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >
+      >   <DialogTitle>Delete Dialog</DialogTitle>
         <DialogContent>
           {singer.count > 0 ? (
             <DialogContentText id="alert-dialog-description">
