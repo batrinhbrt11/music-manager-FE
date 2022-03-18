@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,9 +7,29 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Listitemmusic from "./ListItemMusic";
+import { over } from "stompjs";
+import SockJS from "sockjs-client";
 const Tablesong = ({ list, filter }) => {
   const [play,setPlay] = useState("")
+  const [stompClient, setStompClient] = useState(null);
   
+  const connect = () => {
+    let Sock = new SockJS("http://localhost:8080/ws");
+    const stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+    setStompClient(stompClient);
+  };
+  const onError = (err) => {
+    console.log("error", err);
+  };
+  const onConnected = () => {
+    console.log("connected");
+  };
+  useEffect(() => {
+    connect();
+    
+  },[]);
+
   return (
     <>
     {play && (<audio controls autoPlay>
@@ -34,10 +54,10 @@ const Tablesong = ({ list, filter }) => {
             </TableRow>
           </TableHead>
 
-          {list && (
+          {list  && (
             <TableBody>
               {list.map((row) => (
-                <Listitemmusic music={row} filter={filter} setMusic={url => setPlay(url)} key={row.musicId} />
+                <Listitemmusic music={row} filter={filter} stompClient = {stompClient} setMusic={url => setPlay(url)} key={row.musicId} />
               ))}
             </TableBody>
           )}

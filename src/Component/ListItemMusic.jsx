@@ -17,19 +17,22 @@ import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { storage } from "../FirebaseConfig";
 import { ref, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-const Listitemmusic = ({ music, filter,setMusic }) => {
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
+
+const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
   const dispatch = useDispatch();
+  
   const [listGenre, setListGenre] = useState([]);
   const [listSinger, setListSinger] = useState([]);
   const [genreOfSong, setGenreOfSong] = useState("");
   const [singerOfSong, setSingerOfSong] = useState("");
-  const [file,setFile] = useState(null)
+  const [file, setFile] = useState(null);
   const URL_API = process.env.REACT_APP_API_URL;
   const valueRef = useRef("");
   const name = useRef("");
-  const [genre,setGenre] = useState(music.idGenre);
-  const [singer,setSinger] = useState(music.idSinger);
+  const [genre, setGenre] = useState(music.idGenre);
+  const [singer, setSinger] = useState(music.idSinger);
   const getGenreById = () => {
     fetch(`${URL_API}/genres/${music.idGenre}`)
       .then((res) => res.json())
@@ -45,7 +48,7 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
   useEffect(() => {
     getGenreById();
     getSingerById();
-  }, [music.idGenre,music.idSinger]);
+  }, [music.idGenre, music.idSinger]);
   const handleDeleteClick = () => {
     dispatch(deleteMusic(music.musicId));
   };
@@ -85,7 +88,7 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
       realeaseTime: valueRef.current.value,
       urlFile: url,
     };
-    console.log(newMusic)
+
     dispatch(updateMusic({ id: music.musicId, music: newMusic }));
     setOpenEdit(false);
   };
@@ -100,44 +103,55 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
     setOpenDelete(false);
   };
 
+  
+  const sendMessage = () => {
+    
+    if (stompClient) {
+    
+      stompClient.send("/app/addPlaylist", {},JSON.stringify( music.musicId));
+    }
+    
+  };
+
   const handelAddPlaylist = (e) => {
     e.preventDefault();
     dispatch(addPlaylist(music.musicId));
+    console.log("Sdsa",stompClient)
+    sendMessage();
   };
 
-
-  const handleFileChange =(e)=>{
-    if(e.target.files[0]){
-      setFile(e.target.files[0])
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
     }
-  }
-  const handleUpload = (e)=>{
+  };
+  const handleUpload = (e) => {
     e.preventDefault();
-    if(file){
+    if (file) {
       const storageRef = ref(storage, `/music/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-   
-      uploadTask.on("state_changed",
-        snapshot=>{},
-        error=>{
-          console.log(error)
-        },
-        ()=>{
-          getDownloadURL(uploadTask.snapshot.ref).then(url=> handleSubmitEdit(url))
-        }
-      )
-    }else{
-      handleSubmitEdit(music.urlFile)
-    }
-      
-   
 
-  }
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) =>
+            handleSubmitEdit(url)
+          );
+        }
+      );
+    } else {
+      handleSubmitEdit(music.urlFile);
+    }
+  };
 
   return (
     <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
       <TableCell component="th" scope="row">
-      {music.musicName}
+        {music.musicName}
       </TableCell>
       <TableCell align="right">{music.realeaseTime.slice(0, 10)}</TableCell>
       {filter !== "genre" && <TableCell align="right">{genreOfSong}</TableCell>}
@@ -147,8 +161,10 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
 
       {filter !== "playlist" ? (
         <TableCell align="right" className="actionIcon">
-          
-          <PlayArrowIcon className="iconButton" onClick={e => setMusic(music.urlFile)} />
+          <PlayArrowIcon
+            className="iconButton"
+            onClick={(e) => setMusic(music.urlFile)}
+          />
           <DeleteIcon className="iconButton" onClick={handleClickOpenDelete} />
           |
           <CreateIcon className="iconButton" onClick={handleClickOpenEdit} /> |
@@ -201,7 +217,7 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
                   id="genres"
                   name="genres"
                   value={genre}
-                  onChange={e=> setGenre(e.target.value)}
+                  onChange={(e) => setGenre(e.target.value)}
                 >
                   {listGenre.map((genre) => (
                     <option key={genre.genreId} value={genre.genreId}>
@@ -221,7 +237,7 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
                   id="singer"
                   name="singer"
                   value={singer}
-                  onChange={e=> setSinger(e.target.value)}
+                  onChange={(e) => setSinger(e.target.value)}
                 >
                   {listSinger.map((singer) => (
                     <option key={singer.singerId} value={singer.singerId}>
@@ -249,17 +265,23 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
               </div>
             </div>
             <div className="row">
-            <div className="col-25">
-              <label>File: </label>
+              <div className="col-25">
+                <label>File: </label>
+              </div>
+              <div className="col-75">
+                <input
+                  type="file"
+                  id="myfile"
+                  name="myfile"
+                  accept=".mp3"
+                  onChange={handleFileChange}
+                />
+              </div>
             </div>
-            <div className="col-75">
-            <input type="file" id="myfile" name="myfile"  accept=".mp3" onChange={handleFileChange}/>
-            </div>
-          </div>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={ handleUpload}>
+          <Button autoFocus onClick={handleUpload}>
             Submit
           </Button>
           <Button onClick={handleCloseEdit} autoFocus>
@@ -275,7 +297,9 @@ const Listitemmusic = ({ music, filter,setMusic }) => {
         onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-      >   <DialogTitle>Delete Dialog</DialogTitle>
+      >
+        {" "}
+        <DialogTitle>Delete Dialog</DialogTitle>
         <DialogContent>
           {music.isPlayList ? (
             <DialogContentText id="alert-dialog-description">
