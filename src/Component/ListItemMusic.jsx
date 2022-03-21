@@ -22,7 +22,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
   const dispatch = useDispatch();
-  
   const [listGenre, setListGenre] = useState([]);
   const [listSinger, setListSinger] = useState([]);
   const [genreOfSong, setGenreOfSong] = useState("");
@@ -116,8 +115,10 @@ const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
   const handelAddPlaylist = (e) => {
     e.preventDefault();
     dispatch(addPlaylist(music.musicId));
-    console.log("Sdsa",stompClient)
-    sendMessage();
+    if(filter !== "playlist"){
+      sendMessage();
+    }
+   
   };
 
   const handleFileChange = (e) => {

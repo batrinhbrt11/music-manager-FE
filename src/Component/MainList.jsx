@@ -27,12 +27,25 @@ const Mainlist = () => {
     setListMusic(object.content);
     setTotal(object.totalElement);
   }, [object]);
+
+  const [timer, setTimer] = useState(null);
+
   const handleSearchText = (e) =>{
-    fetch(`${URL_API}/musics/search?text=${e.target.value}`)
-    .then((res) => res.json())
-    .then((result) => setListMusic(result.content))
-    .catch((error) => console.log(error));
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+    setTimer(
+      setTimeout(() => {
+        fetch(`${URL_API}/musics/search?text=${e.target.value}`)
+        .then((res) => res.json())
+        .then((result) => setListMusic(result.content))
+        .catch((error) => console.log(error));
+      }, 500)
+    );
+  
   }
+
   return (
     <div className="Main">
         <h2>List Song</h2>

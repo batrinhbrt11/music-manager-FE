@@ -10,7 +10,6 @@ const Playlist = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const object = useSelector((state) => state.music.object);
-  const isUpdate = useSelector((state) => state.music.isUpdate);
   const [listMusic, setListMusic] = useState(object.content);
   const [total, setTotal] = useState(object.totalElement);
   const handleChange = (event, value) => {
@@ -18,7 +17,7 @@ const Playlist = () => {
   };
   useEffect(() => {
     dispatch(getPlaylist(page));
-  }, [dispatch, page, isUpdate,listMusic]);
+  }, [dispatch, page, listMusic]);
 
   useEffect(() => {
     setListMusic(object.content);
@@ -44,7 +43,13 @@ const Playlist = () => {
   }, []);
   const onMessageReceived = (payload) => {
     const payloadData = JSON.parse(payload.body);
-    setListMusic([payloadData,...listMusic])
+  
+    if(payloadData.isPlayList === false){
+      setListMusic(listMusic.filter((music)=> music.musicId !== payloadData.musicId))
+    }else{
+      setListMusic([payloadData,...listMusic])
+    }
+    
   };
 
   return (

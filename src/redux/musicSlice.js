@@ -88,11 +88,15 @@ export const addPlaylist = createAsyncThunk("music/addPlaylist", async (id) => {
     .catch((error) => {
       console.error(`Error ${error}`);
     });
+  
 });
 const musicSlice = createSlice({
   name: "music",
   initialState: {
-    object: {},
+    object: {
+     
+
+    },
     loading: false,
     error: "",
     status: "",
@@ -202,6 +206,7 @@ const musicSlice = createSlice({
     },
     [addPlaylist.fulfilled]: (state, action) => {
       state.isUpdate = false;
+      //state.object= {...state.object,content:[...state.object.content.map((music)=> music.musicId === action.payload ? {...music, isPlayList:!isPlayList}:music)] }
       state.status = action.payload.status;
       state.error = action.payload.message;
       state.loading = false;
