@@ -45,8 +45,13 @@ const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
       .catch((error) => console.log(error));
   };
   useEffect(() => {
-    getGenreById();
-    getSingerById();
+    if(music.idGenre !== "" && music.idGenre !== null){
+      getGenreById();
+    }
+    if(music.idSinger!== ""&& music.idSinger!== null){
+      getSingerById();
+    }
+  
   }, [music.idGenre, music.idSinger]);
   const handleDeleteClick = () => {
     dispatch(deleteMusic(music.musicId));
@@ -154,10 +159,10 @@ const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
       <TableCell component="th" scope="row">
         {music.musicName}
       </TableCell>
-      <TableCell align="right">{music.realeaseTime.slice(0, 10)}</TableCell>
-      {filter !== "genre" && <TableCell align="right">{genreOfSong}</TableCell>}
+      <TableCell align="right">{ (music.realeaseTime!== ""&& music.realeaseTime!== null) ? music.realeaseTime.slice(0, 10) : "Unknown"}</TableCell>
+      {filter !== "genre" && <TableCell align="right">{ (music.idGenre!== ""&& music.idGenre!== null) ? genreOfSong :"Unknown"}</TableCell>}
       {filter !== "singer" && (
-        <TableCell align="right">{singerOfSong}</TableCell>
+        <TableCell align="right">{(music.idSinger!== ""&& music.idSinger!== null)?singerOfSong:"Unknown"}</TableCell>
       )}
 
       {filter !== "playlist" ? (
@@ -256,7 +261,7 @@ const Listitemmusic = ({ music, filter, setMusic ,stompClient}) => {
                 <TextField
                   id="date"
                   type="date"
-                  defaultValue={music.realeaseTime.slice(0, 10)}
+                  defaultValue={ (music.realeaseTime!== ""&& music.realeaseTime!== null) ? music.realeaseTime.slice(0, 10) : ""}
                   sx={{ width: 220 }}
                   InputLabelProps={{
                     shrink: true,

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef, forwardRef } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getMusic } from "../redux/musicSlice";
+import { addMusicByLink, getMusic } from "../redux/musicSlice";
 import Tablesong from "./TableSong";
+
+import AddIcon from '@mui/icons-material/Add';
 
 const Mainlist = () => {
   const dispatch = useDispatch();
@@ -45,15 +47,30 @@ const Mainlist = () => {
     );
   
   }
+  
+  const musicLink= useRef("")
+  const handleAddSongByLink=()=>{
 
+    dispatch(addMusicByLink(musicLink.current.value))
+    musicLink.current.value=""
+
+  }
+
+  
   return (
     <div className="Main">
         <h2>List Song</h2>
+        
       <hr></hr><br></br>
+     
       <div className="actionContainer">
         <div className="searchContainer">
-          <input type="text" id="fname" name="fname" onChange={handleSearchText} />
+          <input type="text" id="fname" name="fname" onChange={handleSearchText}   placeholder="Search.."/>
           <SearchIcon className="iconButton" />
+        </div>
+        <div className="searchContainer">
+          <input type="text" id="fname" name="fname"   placeholder="Link to song.." ref={musicLink}/>
+          <AddIcon className="iconButton" onClick={handleAddSongByLink}/>
         </div>
         <div>
           <Link to="/add-music">
@@ -74,6 +91,8 @@ const Mainlist = () => {
           )}
         </Stack>
       </div>
+      
+     
     </div>
   );
 };

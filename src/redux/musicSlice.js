@@ -90,6 +90,19 @@ export const addPlaylist = createAsyncThunk("music/addPlaylist", async (id) => {
     });
   
 });
+
+export const addMusicByLink = createAsyncThunk("music/addMusicByLink", async (link) => {
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+  };
+
+  return fetch(`${URL_API}/musics/insert-from-link?url=${link}`, requestOptions)
+    .then((res) => res.json())
+    .catch((error) => {
+      console.error(`Error ${error}`);
+    });
+});
 const musicSlice = createSlice({
   name: "music",
   initialState: {
@@ -183,7 +196,20 @@ const musicSlice = createSlice({
     [addMusic.rejected]: (state, action) => {
       state.loading = false;
     },
-
+//addByLink
+[addMusicByLink.pending]: (state, action) => {
+  state.loading = true;
+  state.isUpdate = true;
+},
+[addMusicByLink.fulfilled]: (state, action) => {
+  state.isUpdate = false;
+  state.status = action.payload.status;
+  state.error = action.payload.message;
+  state.loading = false;
+},
+[addMusicByLink.rejected]: (state, action) => {
+  state.loading = false;
+},
     //update
     [updateMusic.pending]: (state, action) => {
       state.loading = true;

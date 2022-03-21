@@ -158,7 +158,7 @@ const Detailsinger = () => {
                     <select
                       id="gender"
                       name="gender"
-                      defaultValue={singer.singerSex}
+                      defaultValue={singer.singerSex && singer.singerSex}
                       ref={gender}
                     >
                       <option value={true}>Male</option>
@@ -175,7 +175,7 @@ const Detailsinger = () => {
                     <TextField
                       id="date"
                       type="date"
-                      defaultValue={singer.singerBirthdy.slice(0, 10)}
+                      defaultValue={singer.singerBirthdy && singer.singerBirthdy.slice(0, 10)}
                       sx={{ width: 220 }}
                       InputLabelProps={{
                         shrink: true,
@@ -221,7 +221,7 @@ const Detailsinger = () => {
                 <br></br>
                 <br></br>
                 <label>Birthday:</label>{" "}
-                <span>{singer.singerBirthdy.slice(0, 10)}</span>
+                <span>{singer.singerBirthdy && singer.singerBirthdy.slice(0, 10)}</span>
                 <br></br>
                 <br></br>
                 <label>Description:</label> <span>{singer.description}</span>
