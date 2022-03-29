@@ -63,7 +63,7 @@ const Addmusic = () => {
   }
   const handleUpload = (e)=>{
     e.preventDefault();
-  
+    if(file){
       const storageRef = ref(storage, `/music/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
    
@@ -76,7 +76,10 @@ const Addmusic = () => {
           getDownloadURL(uploadTask.snapshot.ref).then(url=>handleSubmit(url))
         }
       )
-   
+    }else{
+      handleSubmit("")
+    }
+
 
   }
   const handleSubmit = (url) => {
@@ -88,7 +91,9 @@ const Addmusic = () => {
         setValid({ ...valid, genre: "Genre is required!!" });
       } else if (singer === "0") {
         setValid({ ...valid, singer: "Singer is required!!" });
-      } else {
+      } else if (url === "") {
+        setValid({ ...valid, url: "Music is required!!" });
+      }else {
         const newMusic = {
           musicName: name,
           idGenre: genre,
@@ -225,9 +230,17 @@ const Addmusic = () => {
               <label>File: </label>
             </div>
             <div className="col-75">
-            <input type="file" id="myfile" name="myfile"  accept=".mp3" onChange={handleFileChange}/>
+            <input type="file" id="myfile" name="myfile"  accept=".mp3" onChange={handleFileChange}  onFocus={(e) => setValid({})}/>
             </div>
           </div>
+          {valid.url && (
+            <div className="row">
+              <div className="col-25"></div>
+              <div className="col-75">
+                <span className="errorMessage">{valid.url}</span>
+              </div>
+            </div>
+          )}
           <div className="row">
             <input type="submit" value="Submit" />
           </div>

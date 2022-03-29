@@ -118,7 +118,7 @@ const Headerbar = () => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
             >
-              LOGO
+              Music Manager
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link to="/">
